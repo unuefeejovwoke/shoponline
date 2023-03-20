@@ -94,3 +94,27 @@ def registerVendor(request):
     }
 
     return render(request, 'accounts/registerVendor.html', context)
+
+def login(request):
+    # if request.user.is_authenticated:
+    #     messages.warning(request, 'You are already logged in!')
+    #     return redirect('home')
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = auth.authenticate(email=email, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, 'You are now logged in.')
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid login credentials')
+            return redirect('login')
+    return render(request, 'accounts/login.html')
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, 'You are logged out.')
+    return redirect('login')
