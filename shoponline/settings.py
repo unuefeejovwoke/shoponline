@@ -139,7 +139,7 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'ShopOnline Marketplace <django.seu7.tech@gmail.com>'
+DEFAULT_FROM_EMAIL = 'ShopOnline Marketplace <django.vuwill7114@gmail.com>'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
