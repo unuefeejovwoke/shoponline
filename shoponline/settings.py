@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.get_vendor',
+                'accounts.context_processors.get_google_api',
             ],
         },
     },
@@ -144,8 +145,10 @@ DEFAULT_FROM_EMAIL = 'ShopOnline Marketplace <django.vuwill7114@gmail.com>'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+GOOGLE_API_KEY = "AIzaSyCf1P0BMWbnPEbHGrajdbkmQ5Fwg3U8eX8"
