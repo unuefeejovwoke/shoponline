@@ -84,10 +84,10 @@ WSGI_APPLICATION = 'shoponline.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Shoponline',
-        'USER': 'postgres',
-        'PASSWORD': 'ejoks123#',
-        'HOST': 'localhost',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
     }
 }
 
