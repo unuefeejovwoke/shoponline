@@ -1,4 +1,4 @@
-from unicodedata import category
+
 from urllib import response
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,7 +6,6 @@ from django.db import IntegrityError
 
 # from menu.forms import CategoryForm, FoodItemForm
 # from orders.models import Order, OrderedFood
-import vendor
 from .forms import VendorForm
 from accounts.forms import UserProfileForm
 
@@ -16,7 +15,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_vendor
-# from menu.models import Category, FoodItem
+from menu.models import Category, FoodItem
 from django.template.defaultfilters import slugify
 
 
@@ -56,4 +55,9 @@ def vprofile(request):
 
 
 def menu_builder(request):
-    return render(request, 'vendor/menu_builder.html')
+    vendor = Vendor.objects.get(user=request.user)
+    categories = Category.objects.filter(vendor=vendor)
+    context = {
+        'categories': categories,
+    }
+    return render(request, 'vendor/menu_builder.html', context)
