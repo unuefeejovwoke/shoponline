@@ -61,3 +61,15 @@ def menu_builder(request):
         'categories': categories,
     }
     return render(request, 'vendor/menu_builder.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def fooditems_by_category(request, pk=None):
+    vendor = get_vendor(request)
+    category = get_object_or_404(Category, pk=pk)
+    fooditems = FoodItem.objects.filter(vendor=vendor, category=category)
+    context = {
+        'fooditems': fooditems,
+        'category': category,
+    }
+    return render(request, 'vendor/fooditems_by_category.html', context)
