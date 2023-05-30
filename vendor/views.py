@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import IntegrityError
 
-# from menu.forms import CategoryForm, FoodItemForm
+from menu.forms import CategoryForm
 # from orders.models import Order, OrderedFood
 from .forms import VendorForm
 from accounts.forms import UserProfileForm
@@ -56,7 +56,7 @@ def vprofile(request):
 
 def menu_builder(request):
     vendor = Vendor.objects.get(user=request.user)
-    categories = Category.objects.filter(vendor=vendor)
+    categories = Category.objects.filter(vendor=vendor).order_by('created_at')
     context = {
         'categories': categories,
     }
@@ -73,3 +73,64 @@ def fooditems_by_category(request, pk=None):
         'category': category,
     }
     return render(request, 'vendor/fooditems_by_category.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category_name = form.cleaned_data['category_name']
+            category = form.save(commit=False)
+            category.vendor = get_vendor(request)
+            
+            category.save() # here the category id will be generated
+            category.slug = slugify(category_name)+'-'+str(category.id) # chicken-15
+            category.save()
+            messages.success(request, 'Category added successfully!')
+            return redirect('menu_builder')
+        else:
+            print(form.errors)
+
+    else:
+        form = CategoryForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'vendor/add_category.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def edit_category(request, pk=None):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category_name = form.cleaned_data['category_name']
+            category = form.save(commit=False)
+            category.vendor = get_vendor(request)
+            category.slug = slugify(category_name)
+            form.save()
+            messages.success(request, 'Category updated successfully!')
+            return redirect('menu_builder')
+        else:
+            print(form.errors)
+
+    else:
+        form = CategoryForm(instance=category)
+    context = {
+        'form': form,
+        'category': category,
+    }
+    return render(request, 'vendor/edit_category.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def delete_category(request, pk=None):
+    category = get_object_or_404(Category, pk=pk)
+    category.delete()
+    messages.success(request, 'Category has been deleted successfully!')
+    return redirect('menu_builder')
