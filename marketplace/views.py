@@ -3,6 +3,7 @@ from vendor.models import Vendor
 from django.db.models import Prefetch
 from menu.models import Category, FoodItem
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 
 # Create your views here.
 def marketplace(request):
@@ -44,3 +45,7 @@ def vendor_detail(request, vendor_slug):
         # 'current_opening_hours': current_opening_hours,
     }
     return render(request, 'marketplace/vendor_detail.html', context)
+
+
+def add_to_cart(request, food_id): 
+    return HttpResponse("Testing")
