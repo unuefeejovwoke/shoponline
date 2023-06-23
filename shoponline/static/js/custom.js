@@ -107,7 +107,7 @@ $(document).ready(function(){
     })
 
 
-    // place the cart item quantity on load
+  // place the cart item quantity on load
     $('.item_qty').each(function(){
         var the_id = $(this).attr('id')
         var qty = $(this).attr('data-qty')
