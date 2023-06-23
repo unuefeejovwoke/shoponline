@@ -3,6 +3,7 @@ from vendor.models import Vendor
 from django.db.models import Prefetch
 from .context_processors import get_cart_counter
 from menu.models import Category, FoodItem
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from .models import Cart
@@ -98,3 +99,11 @@ def decrease_cart(request, food_id):
         
     else:
         return JsonResponse({'status': 'login_required', 'message': 'Please login to continue'})
+    
+@login_required(login_url = 'login')
+def cart(request):
+    cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
+    context = {
+        'cart_items': cart_items,
+    }
+    return render(request, 'marketplace/cart.html', context)
